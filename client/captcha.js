@@ -1,15 +1,11 @@
 window.VisualCaptcha = {};
 
-Template.captcha.selectedWord = function() { 
+Template.captcha.selectedWord = function() {
   return Session.get("selectedWord");
 };
 
 Template.captcha.images = function() {
   return Session.get("captchaImages");
-}
-
-Template.statusMessage.msg = function() {
-  return Session.get("statusMessage");
 }
 
 Template.captcha.created = function(){
@@ -38,32 +34,30 @@ Template.captcha.rendered = function(){
       } );
       VisualCaptcha.captcha = captchaEl.data( 'captcha' );
 
-      
+
       var queryString = window.location.search;
       // Show success/error messages
-      
+
 }
 
-VisualCaptcha.validateCaptcha = function(callback){
+VisualCaptcha.validateCaptcha = function (success, failure) {
   var data = VisualCaptcha.captcha.getCaptchaData();
   Meteor.call("validateCaptcha",data, function(err,result){
     if(!err){
-      if ( result === 'noCaptcha') {
-        Session.set("statusMessage", { valid: "", css: "icon-no", text: "visualCaptcha was not started!" } );
+      if (result === 'noCaptcha') {
+          failure('Server error (VisualCaptcha was not started)');
       } else if ( result === 'validImage'){
-          Session.set("statusMessage", { valid: "valid",css: "icon-yes", text: "Image was valid!" } );
-          callback()
+          success()
       } else if ( result ==='failedImage'){
-          Session.set("statusMessage", { valid: "",css: "icon-no", text: "Image was NOT valid!" } );
+          failure('You\'ve selected WRONG image, please try again');
       } else if ( result === 'validAudio'){
-          Session.set("statusMessage", { valid: "valid",css: "icon-yes", text: "Accessibility answer was valid!" } );
-          callback();
+          success();
       } else if ( result === 'failedAudio'){
-          Session.set("statusMessage", { valid: "",css: "icon-no", text: "Accessibility answer was NOT valid!" } );
+          failure('Accessibility answer was NOT valid!');
       } else if ( result === 'failedPost'){
-          Session.set("statusMessage", { valid: "",css: "icon-no", text: "No visualCaptcha answer was given!" } );
+          failure('Please select an image');
       }
     }
-    
+
   });
 }

@@ -1,15 +1,5 @@
-<template name="statusMessage">
-    <div id="status-message">
-    {{#if msg}}
-        <div class="status {{msg.valid}}"> <div class="{{msg.css}}"></div> <p>{{msg.text}}</p> </div>
-    {{/if}}
-    </div>
-</template>
-
-
 <template name="captcha">
 <div class="captcha-wrapper">
-    {{>statusMessage}}
     <div id="sample-captcha" class="visualCaptcha">
         <div class="visualCaptcha-accessibility-wrapper visualCaptcha-hide">
             <div class="accessibility-description">Click or touch the {{selectedWord}} to prove you are human</div>
